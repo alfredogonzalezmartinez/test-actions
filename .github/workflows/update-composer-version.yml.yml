@@ -2,16 +2,15 @@ name: Update Composer Version
 
 on:
   create:
-    branches:
-      - 'release/*'
 
 jobs:
   update_version:
+    if: startsWith(github.ref, 'refs/heads/release/') # Filtra ramas que comiencen con "release/"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # - name: Checkout code
+      #   uses: actions/checkout@v
 
       - name: Set version in composer.json
         id: set_version
