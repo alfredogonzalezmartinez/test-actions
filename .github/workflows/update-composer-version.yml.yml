@@ -1,0 +1,33 @@
+name: Update Composer Version
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set version in composer.json
+        id: set_version
+        run: |
+          # Extraer el nombre de la rama
+          BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/release/}")
+
+          # Modificar el archivo composer.json
+          jq ".version = \"${BRANCH_NAME}\"" composer.json > composer.tmp && mv composer.tmp composer.json
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add composer.json
+          git commit -m "Update version in composer.json to ${BRANCH_NAME}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
