@@ -1,7 +1,7 @@
 name: Update Composer Version
 
 on:
-  push:
+  create:
     branches:
       - 'release/*'
 
